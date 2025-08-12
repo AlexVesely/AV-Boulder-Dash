@@ -164,7 +164,7 @@ public class HighScoreTableManager {
      */
     public static void saveHighScoreTable(ArrayList<HighScore> highScores, int level) {
         try {
-            String outputFile = "txt/HighScoreTable" + level + ".txt";
+            String outputFile = "src/main/resources/txt/HighScoreTable" + level + ".txt";
             PrintWriter out = new PrintWriter(outputFile);
             for (int i = 0; i < highScores.size(); i++) {
                 HighScore highScore = highScores.get(i);

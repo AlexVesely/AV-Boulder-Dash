@@ -63,7 +63,7 @@ public class ProfileManager {
      * @param profile The PlayerProfile to save.
      */
     public static void saveProfileToFile(final PlayerProfile profile) {
-        String outputFile = "txt/" + profile.getPlayerId() + ".txt";
+        String outputFile = "src/main/resources/txt/" + profile.getPlayerId() + ".txt";
         try {
             PrintWriter out = new PrintWriter(outputFile);
             out.println(profile.getPlayerId());
@@ -81,7 +81,7 @@ public class ProfileManager {
      */
     public static ArrayList<PlayerProfile> getAvailableProfiles() {
         ArrayList<PlayerProfile> profiles = new ArrayList<>();
-        File folder = new File("txt");
+        File folder = new File("src/main/resources/txt");
 
         if (folder.exists() && folder.isDirectory()) {
             File[] files = folder.listFiles((dir, name) -> name.matches("\\d+\\.txt"));
@@ -106,7 +106,7 @@ public class ProfileManager {
      * @param idToDelete The ID of the profile to delete.
      */
     public static void deleteProfile(final int idToDelete) {
-        String filePath = "txt/" + idToDelete + ".txt";
+        String filePath = "src/main/resources/txt" + idToDelete + ".txt";
         Path path = Paths.get(filePath);
         try {
             Files.delete(path);
@@ -121,7 +121,7 @@ public class ProfileManager {
      */
     public static int getNextPlayerId() {
         int playerId = 0;
-        String filePath = "txt/NextPlayerId.txt";
+        String filePath = "src/main/resources/txt/NextPlayerId.txt";
         File readFile = new File(filePath);
 
         //Read Next Player ID
@@ -150,7 +150,7 @@ public class ProfileManager {
      * @return True if the save file exists, false if a save file cannot be found.
      */
     public static boolean doesPlayerSaveFileExist(final int id) {
-        String folderPath = "txt";
+        String folderPath = "src/main/resources/txt";
         String fileName = "Save" + id + ".txt";
         File file = new File(folderPath, fileName);
         return file.exists() && file.isFile();

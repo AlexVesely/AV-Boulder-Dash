@@ -70,13 +70,13 @@ public class FileHandler {
         int currentLevel = currentProfile.getMaxLevelReached();
 
         int id = currentProfile.getPlayerId();
-        int amoebaGrowthRate = readAmoebaGrowthRateFromLevelFile("txt/Level" + currentLevel + ".txt");
-        int amoebaSizeLimit = readAmoebaSizeLimitFromLevelFile("txt/Level" + currentLevel + ".txt");
+        int amoebaGrowthRate = readAmoebaGrowthRateFromLevelFile("src/main/resources/txt/Level" + currentLevel + ".txt");
+        int amoebaSizeLimit = readAmoebaSizeLimitFromLevelFile("src/main/resources/txt/Level" + currentLevel + ".txt");
 
         String fileName = "Save" + id + ".txt";
 
         try {
-            String outputFile = "txt/" + fileName;
+            String outputFile = "src/main/resources/txt" + fileName;
             PrintWriter out = new PrintWriter(outputFile);
             out.println(currentGrid[0].length + " " + currentGrid.length);
             out.println(secondsRemaining);
@@ -315,7 +315,7 @@ public class FileHandler {
      */
     public static void deleteSaveFile(PlayerProfile currentProfile) {
         int idToDelete = currentProfile.getPlayerId();
-        String filePath = "txt/Save" + idToDelete + ".txt";
+        String filePath = "src/main/resources/txt/Save" + idToDelete + ".txt";
         Path path = Paths.get(filePath);
 
         if (!Files.exists(path)) {

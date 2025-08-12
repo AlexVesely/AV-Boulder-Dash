@@ -80,6 +80,7 @@ public class Main extends Application {
 		primaryStage.setScene(menuScene);
 
 		profiles = ProfileManager.getAvailableProfiles(); // Load player profiles
+		System.out.println(profiles.size());
 
 		primaryStage.show(); // Show the main menu
 	}
@@ -125,7 +126,7 @@ public class Main extends Application {
 		newGameButton.setOnAction(e -> {
 			currentProfile = ProfileManager.promptForProfile();
 			profiles.add(currentProfile);
-			String levelFile = "txt/Level1.txt";
+			String levelFile = "src/main/resources/txt/Level1.txt";
 			setupGame(primaryStage, levelFile);
 		});
 		return newGameButton;
@@ -249,11 +250,11 @@ public class Main extends Application {
 		if (currentProfile != null) {
 			int playerID = currentProfile.getPlayerId();
 			if (ProfileManager.doesPlayerSaveFileExist(playerID)) {
-				String levelFile = "txt/Save" + playerID + ".txt";
+				String levelFile = "src/main/resources/txt/Save" + playerID + ".txt";
 				setupGame(primaryStage, levelFile);
 			} else {
 				int level = currentProfile.getMaxLevelReached();
-				String levelFile = "txt/Level" + level + ".txt";
+				String levelFile = "src/main/resources/txt/Level" + level + ".txt";
 				setupGame(primaryStage, levelFile);
 			}
 		}
@@ -426,7 +427,7 @@ public class Main extends Application {
 		Button resetGridButton = new Button("Reset Level");
 		resetGridButton.setOnAction(e -> {
 			int levelReached = currentProfile.getMaxLevelReached();
-			String levelFile = "txt/Level" + levelReached + ".txt";
+			String levelFile = "src/main/resources/txt/Level" + levelReached + ".txt";
 			secondsRemaining = FileHandler.readSecondsFromLevelFile(levelFile);
 			gameController.getPlayer().setDiamondCount(FileHandler.readDiamondsCollectedFromLevelFile(levelFile));
 			gameController.getPlayer().setKeyInventory(FileHandler.readKeyInventoryFromLevelFile(levelFile));
@@ -483,7 +484,7 @@ public class Main extends Application {
 
 		int diamondsCollected = gameController.getPlayer().getDiamondCount();
 		int diamondsRequired = FileHandler.readRequiredDiamondsFromLevelFile(
-				"txt/Level" + currentProfile.getMaxLevelReached() + ".txt");
+				"src/main/resources/txt/Level" + currentProfile.getMaxLevelReached() + ".txt");
 		Text diamondCountText = new Text("Diamonds Collected: " + diamondsCollected + " / " + diamondsRequired);
 		diamondCountTimeline = new Timeline(new KeyFrame(Duration.millis(49), event -> {
 			if (gameController.getPlayer() != null) {
@@ -520,7 +521,7 @@ public class Main extends Application {
 	 */
 	public void levelCompleted(GameController gameController) {
 		int levelReached = currentProfile.getMaxLevelReached();
-		String levelFile = "txt/Level" + levelReached + ".txt";
+		String levelFile = "src/main/resources/txt/Level" + levelReached + ".txt";
 		String[][] initialGrid = FileHandler.readElementGridFromLevelFile(levelFile);
 		int score = calcScore(secondsRemaining, gameController.getPlayer().getDiamondCount());
 		gameController.getGridManager().reinitializeGrid(initialGrid);
@@ -547,7 +548,7 @@ public class Main extends Application {
 		// Check if there’s a next level
 		int nextLevel = currentLevel + 1;
 		if (nextLevel <= 3) {
-			String nextLevelFile = "txt/Level" + nextLevel + ".txt";
+			String nextLevelFile = "src/main/resources/txt/Level" + nextLevel + ".txt";
 			currentProfile.setMaxLevelReached(nextLevel); // Update player's progress
 			profiles.set(profiles.indexOf(currentProfile), currentProfile); // Update profile list
 			ProfileManager.saveProfileToFile(currentProfile); // Persist changes
