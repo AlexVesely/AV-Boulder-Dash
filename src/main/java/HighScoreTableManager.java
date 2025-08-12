@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
 import java.util.ArrayList;
@@ -134,26 +135,12 @@ public class HighScoreTableManager {
      * @return A list of high scores for the specified level.
      */
     public static ArrayList<HighScore> getHighScores(int level) {
-        String folderPath = "txt";
         ArrayList<HighScore> highScores = new ArrayList<>();
+        String fileName = "/txt/HighScoreTable" + level + ".txt";
 
-        File folder = new File(folderPath);
+        try (InputStream inputStream = HighScoreTableManager.class.getResourceAsStream(fileName);
+             Scanner scanner = new Scanner(inputStream)) {
 
-        // If the folder is invalid, return empty list
-        if (!(folder.exists() && folder.isDirectory())) {
-            System.out.println("Folder does not exist or is not a directory: " + folderPath);
-            return highScores;
-        }
-
-        File[] files = folder.listFiles((dir, name) ->
-                name.matches("HighScoreTable" + level + ".txt"));
-        if (files == null || files.length == 0) {
-            System.out.println("No matching file found for level " + level);
-            return highScores;
-        }
-
-        File matchingFile = files[0];
-        try (Scanner scanner = new Scanner(matchingFile)) {
             while (scanner.hasNextLine()) {
                 String[] splitHighScore = scanner.nextLine().split(" ");
                 String name = splitHighScore[0];
@@ -161,11 +148,14 @@ public class HighScoreTableManager {
                 HighScore highScore = new HighScore(name, score);
                 highScores.add(highScore);
             }
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + matchingFile.getName());
+
+        } catch (Exception e) {
+            System.out.println("Error reading high scores from " + fileName + ": " + e.getMessage());
         }
+
         return highScores;
     }
+
 
     /**
      * Saves a level's high score table to its high score table file.

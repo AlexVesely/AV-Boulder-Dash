@@ -1,1 +1,4 @@
 Alex 5000
+Caitlin 4000
+John 3000
+Sarah 2000
