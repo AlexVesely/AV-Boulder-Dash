@@ -328,7 +328,6 @@ public class GameController {
      */
     public static void gameOver() {
         gameStatus = false;
-        System.out.println("GAME OVER");
     }
 
     public static void gameStart() {

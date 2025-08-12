@@ -44,7 +44,6 @@ public class Exit extends Element {
      */
     public void unlock() {
         this.canBeEntered = true;
-        System.out.println("Exit Unlocked!");
     }
 
     /**
@@ -52,7 +51,6 @@ public class Exit extends Element {
      */
     public void lock() {
         this.canBeEntered = false;
-        System.out.println("Exit Locked!");
     }
 
     /**

@@ -51,7 +51,6 @@ public class Player extends Element {
      * @param key the key to collect
      */
     public void collectKey(Key key) {
-        System.out.println(key);
         keyInventory.add(key.getColour());
     }
 
@@ -59,7 +58,6 @@ public class Player extends Element {
      * Clears all keys from the player's inventory.
      */
     public void resetKeyInventory() {
-        System.out.println("Key inventory reset");
         keyInventory.clear();
     }
 
@@ -121,7 +119,6 @@ public class Player extends Element {
     public void checkDiamonds() {
         if (getDiamondCount() >= diamondsRequired) {
             setHasEnoughDiamonds(true);
-            System.out.println("You have enough Diamonds to finish the level!");
         }
     }
 
@@ -192,7 +189,6 @@ public class Player extends Element {
             gridManager.removeFromList(gridManager.getElement(targetRow, targetColumn)); //remove from diamonds list to stop falling
             gridManager.removeElement(targetRow, targetColumn);
             grid[targetRow][targetColumn] = null;
-            System.out.println("Diamond removed");
             checkDiamonds();
             return true;
         }
@@ -210,7 +206,6 @@ public class Player extends Element {
                 lockedDoor.unlock();
                 return true;
             } else {
-                System.out.println("Player needs a " + lockedDoor.getColour() + " key to open this door.");
                 return false;
             }
         }
@@ -221,7 +216,6 @@ public class Player extends Element {
                 hasPlayerWon = true;
                 return true;
             } else {
-                System.out.println("Player needs more diamonds to enter the exit!");
                 return false;
             }
 
@@ -237,7 +231,6 @@ public class Player extends Element {
     public void resetDiamondCountStatus() {
         this.diamondCount = 0;
         this.hasEnoughDiamonds = false;
-        System.out.println("Diamond count reset to: " + this.diamondCount);
     }
 
     /**

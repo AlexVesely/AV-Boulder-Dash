@@ -88,9 +88,6 @@ public abstract class DangerousRock extends Element {
             // beneath the magic wall (assuming it wouldn't roll)
             // turn into diamond and vice versa
 
-            if (grid[newRow + 1][col] instanceof Frog || grid[newRow + 1][col] instanceof Fly) {
-                System.out.println("Rock has crushed Enemy after passing through magic wall");
-            }
             MagicWall magicWall = (MagicWall) gridManager.getElement(newRow, col);
             magicWall.transformRock(this, gridManager);
 

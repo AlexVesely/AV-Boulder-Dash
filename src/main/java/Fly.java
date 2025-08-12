@@ -74,10 +74,6 @@ public class Fly extends Element {
                 gridManager.destroyRemoveFromList(player);
                 this.setRow(newRow);
                 this.setColumn(newCol);
-                System.out.println("Player has been killed by the fly!");
-
-            } else if (target instanceof Amoeba) {
-                // explode!!!!!
             }
         }
     }

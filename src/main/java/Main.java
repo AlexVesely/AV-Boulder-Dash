@@ -80,8 +80,6 @@ public class Main extends Application {
 		primaryStage.setScene(menuScene);
 
 		profiles = ProfileManager.getAvailableProfiles(); // Load player profiles
-		System.out.println(profiles.size());
-
 		primaryStage.show(); // Show the main menu
 	}
 
