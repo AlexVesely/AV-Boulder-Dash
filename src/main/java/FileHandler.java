@@ -321,12 +321,10 @@ public class FileHandler {
         if (!Files.exists(path)) {
             return;
         }
-
         try {
             Files.delete(path);
         } catch (IOException e) {
             System.err.println("An error occurred: " + e.getMessage());
         }
     }
-
 }

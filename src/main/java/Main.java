@@ -74,6 +74,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage; // Store the primary stage
 		primaryStage.setTitle("BOULDER DASH");
+		primaryStage.getIcons().add(new Image("images/boulder.png"));
 
 		VBox menuBox = createMenuBox();
 		Scene menuScene = new Scene(menuBox, WINDOW_WIDTH, WINDOW_HEIGHT);
