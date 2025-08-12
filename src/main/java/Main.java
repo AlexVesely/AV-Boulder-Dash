@@ -125,7 +125,7 @@ public class Main extends Application {
 			currentProfile = ProfileManager.promptForProfile();
 			profiles.add(currentProfile);
 			String levelFile = "src/main/resources/txt/Level1.txt";
-			setupGame(primaryStage, levelFile);
+			setupGame(primaryStage, levelFile, true);
 		});
 		return newGameButton;
 	}
@@ -249,11 +249,11 @@ public class Main extends Application {
 			int playerID = currentProfile.getPlayerId();
 			if (ProfileManager.doesPlayerSaveFileExist(playerID)) {
 				String levelFile = "src/main/resources/txt/Save" + playerID + ".txt";
-				setupGame(primaryStage, levelFile);
+				setupGame(primaryStage, levelFile,true);
 			} else {
 				int level = currentProfile.getMaxLevelReached();
 				String levelFile = "src/main/resources/txt/Level" + level + ".txt";
-				setupGame(primaryStage, levelFile);
+				setupGame(primaryStage, levelFile,true);
 			}
 		}
 		dialog.close();
@@ -322,7 +322,7 @@ public class Main extends Application {
 	 * @param primaryStage the primary stage for the game
 	 * @param levelFile the file of the level being loaded in
 	 */
-	public void setupGame(Stage primaryStage, String levelFile) {
+	public void setupGame(Stage primaryStage, String levelFile, boolean autoStart) {
 		String[][] initialGrid = FileHandler.readElementGridFromLevelFile(levelFile);
 		int amoebaGrowthRate = FileHandler.readAmoebaGrowthRateFromLevelFile(levelFile); //Read amoeba growth rate
 		secondsRemaining = FileHandler.readSecondsFromLevelFile(levelFile);
@@ -397,6 +397,10 @@ public class Main extends Application {
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+		if (autoStart) {
+			playAllTimelines();
+		}
 	}
 
 	/**
@@ -552,7 +556,7 @@ public class Main extends Application {
 			ProfileManager.saveProfileToFile(currentProfile); // Persist changes
 
 			secondsRemaining = FileHandler.readSecondsFromLevelFile(nextLevelFile);
-			setupGame(primaryStage, nextLevelFile);
+			setupGame(primaryStage, nextLevelFile, false);
 		} else {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setTitle("VICTORY");
