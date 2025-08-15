@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
  * @author Alex Vesely
  */
 public class Renderer {
-    private static final int GRID_CELL_WIDTH = Main.GRID_CELL_WIDTH;
-    private static final int GRID_CELL_HEIGHT = Main.GRID_CELL_HEIGHT;
+    private static final int GRID_CELL_WIDTH = BoulderDashApp.GRID_CELL_WIDTH;
+    private static final int GRID_CELL_HEIGHT = BoulderDashApp.GRID_CELL_HEIGHT;
 
     /**
      * Renders the provided grid of elements onto the canvas.
