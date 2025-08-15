@@ -72,105 +72,41 @@ public class BoulderDashApp extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage; // Store the primary stage
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("BOULDER DASH");
         primaryStage.getIcons().add(new Image("images/boulder.png"));
 
-        VBox menuBox = createMenuBox();
+        VBox menuBox = MainMenuUI.createMenu(new MainMenuUI.MenuActionListener() {
+            @Override
+            public void onStartNewGame() {
+                currentProfile = ProfileManager.promptForProfile();
+                profiles.add(currentProfile);
+                String levelFile = "src/main/resources/txt/Level1.txt";
+                setupGame(primaryStage, levelFile, true);
+            }
+            @Override
+            public void onLoadGame() {
+                showProfileSelectionDialog("Load Game", true);
+            }
+            @Override
+            public void onDeleteProfile() {
+                showProfileSelectionDialog("Delete Player Profile", false);
+            }
+            @Override
+            public void onShowHighScores() {
+                showHighScoresTableSelection();
+            }
+            @Override
+            public void onQuit() {
+                closeGame();
+            }
+        }, SPACING, LOGO_WIDTH);
+
         Scene menuScene = new Scene(menuBox, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(menuScene);
 
-        profiles = ProfileManager.getAvailableProfiles(); // Load player profiles
-        primaryStage.show(); // Show the main menu
-    }
-
-    /**
-     * Creates the main menu layout with buttons and a logo.
-     * @return the Main menu
-     */
-    private VBox createMenuBox() {
-        VBox menuBox = new VBox(SPACING);
-
-        ImageView logo = createLogo();
-        Button newGameButton = createNewGameButton();
-        Button loadGameButton = createLoadGameButton();
-        Button profileButton = createProfileButton();
-        Button highScoresButton = createHighScoresButton();
-        Button quitButton = createQuitButton();
-
-        menuBox.getChildren().addAll(logo, newGameButton, loadGameButton,
-                profileButton, highScoresButton, quitButton);
-        menuBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
-        return menuBox;
-    }
-
-    /**
-     * Creates the logo for the main menu.
-     * @return the image of the logo
-     */
-    private ImageView createLogo() {
-        Image logoImage = new Image("images/title.png");
-        ImageView logoImageView = new ImageView(logoImage);
-        logoImageView.setFitWidth(LOGO_WIDTH);
-        logoImageView.setPreserveRatio(true);
-        return logoImageView;
-    }
-
-    /**
-     * Creates the "Start New Game" button.
-     * @return the New Game Buttion.
-     */
-    private Button createNewGameButton() {
-        Button newGameButton = new Button("Start New Game");
-        newGameButton.setOnAction(e -> {
-            currentProfile = ProfileManager.promptForProfile();
-            profiles.add(currentProfile);
-            String levelFile = "src/main/resources/txt/Level1.txt";
-            setupGame(primaryStage, levelFile, true);
-        });
-        return newGameButton;
-    }
-
-    /**
-     * Creates the "Load Game" button.
-     * @return the load game button
-     */
-    private Button createLoadGameButton() {
-        Button loadGameButton = new Button("Load Game");
-        loadGameButton.setOnAction(e -> showProfileSelectionDialog(
-                "Load Game", true));
-        return loadGameButton;
-    }
-
-    /**
-     * Creates the "Delete Player Profile" button.
-     * @return the delete profile button.
-     */
-    private Button createProfileButton() {
-        Button profileButton = new Button("Delete Player Profile");
-        profileButton.setOnAction(e -> showProfileSelectionDialog(
-                "Delete Player Profile", false));
-        return profileButton;
-    }
-
-    /**
-     * Creates the "High Scores" button to access the High Score Table.
-     * @return create high score button
-     */
-    private Button createHighScoresButton() {
-        Button highScoresButton = new Button("High Scores");
-        highScoresButton.setOnAction(e -> showHighScoresTableSelection());
-        return highScoresButton;
-    }
-
-    /**
-     * Creates the "Quit Game" button.
-     * @return the quit button.
-     */
-    private Button createQuitButton() {
-        Button quitButton = new Button("Quit Game");
-        quitButton.setOnAction(e -> closeGame());
-        return quitButton;
+        profiles = ProfileManager.getAvailableProfiles();
+        primaryStage.show();
     }
 
     /**
