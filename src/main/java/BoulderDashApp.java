@@ -4,25 +4,20 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  * BoulderDashApp sets up the GUI and initialises everything for a game to take place.
@@ -40,12 +35,6 @@ public class BoulderDashApp extends Application {
     public static final int DIAMOND_SCORE_VALUE = 100;
     public static final int TIME_SCORE_VALUE = 25;
     public static final int SPACING = 10;
-    public static final int LOGO_WIDTH = 700;
-    public static final int PROFILE_SELECTION_W = 300;
-    public static final int PROFILE_SELECTION_H = 200;
-    public static final int HIGH_SCORE_SELECTION_W = 300;
-    public static final int HIGH_SCORE_SELECTION_H = 150;
-
 
     // Timeline for periodic ticks
     private Timeline playerTickTimeline;
@@ -100,7 +89,7 @@ public class BoulderDashApp extends Application {
             public void onQuit() {
                 closeGame();
             }
-        }, SPACING, LOGO_WIDTH);
+        });
 
         Scene menuScene = new Scene(menuBox, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(menuScene);
@@ -115,56 +104,27 @@ public class BoulderDashApp extends Application {
      * @param isLoadGame true if selection is to load game, false if it is for deletion.
      */
     private void showProfileSelectionDialog(String title, boolean isLoadGame) {
-        Stage dialog = new Stage();
-        dialog.setTitle(title);
-
-        ComboBox<String> profileDropdown = new ComboBox<>();
-        for (PlayerProfile profile : profiles) {
-            profileDropdown.getItems().add(profile.getName());
-        }
-
-        String buttonText;
-
-        if (isLoadGame) {
-            buttonText = "Load";
-        } else {
-            buttonText = "Delete";
-        }
-
-        Button actionButton = new Button(buttonText);
-
-        if (!isLoadGame) {
-            actionButton.setStyle("-fx-background-color: red;");
-        } else {
-            actionButton.setStyle(null);
-        }
-
-        actionButton.setOnAction(event -> {
-            String selectedProfileName = profileDropdown.getValue();
-            if (selectedProfileName != null) {
-                if (isLoadGame) {
-                    handleLoadGame(selectedProfileName, dialog);
-                } else {
-                    handleDeleteProfile(selectedProfileName, dialog);
+        MainMenuUI.showProfileSelectionDialog(
+                title,
+                isLoadGame,
+                profiles,
+                new MainMenuUI.ProfileActionListener() {
+                    @Override
+                    public void onLoadProfile(String profileName, Stage dialog) {
+                        handleLoadGame(profileName, dialog);
+                    }
+                    @Override
+                    public void onDeleteProfile(String profileName, Stage dialog) {
+                        handleDeleteProfile(profileName, dialog);
+                    }
                 }
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("No Selection");
-                alert.setHeaderText("No Profile Selected");
-                alert.setContentText("Please select a profile");
-                alert.showAndWait();
-            }
-        });
+        );
+    }
 
-        Label label = new Label("Select a player profile:");
-
-        VBox layout = new VBox(SPACING);
-        layout.getChildren().addAll(label, profileDropdown, actionButton);
-        layout.setAlignment(Pos.CENTER);
-
-        Scene scene = new Scene(layout, PROFILE_SELECTION_W, PROFILE_SELECTION_H);
-        dialog.setScene(scene);
-        dialog.show();
+    private void showHighScoresTableSelection() {
+        MainMenuUI.showHighScoresTableSelection(
+                (level, dialog) -> HighScoreTableManager.displayHighScoresInMainMenu(level, dialog)
+        );
     }
 
     /**
@@ -217,41 +177,6 @@ public class BoulderDashApp extends Application {
             ProfileManager.deleteProfile(profileToDelete.getPlayerId());
             dialog.close();
         }
-    }
-
-    /**
-     * Displays the available high scores to view
-     */
-    private void showHighScoresTableSelection() {
-        Stage dialog = new Stage();
-        dialog.setTitle("High Scores");
-        dialog.initModality(Modality.APPLICATION_MODAL);
-
-        Button highScores1Button = new Button("Level 1 High Scores");
-        highScores1Button.setOnAction(event -> {
-            dialog.hide();
-            HighScoreTableManager.displayHighScoresInMainMenu(1, dialog);
-        });
-
-        Button highScores2Button = new Button("Level 2 High Scores");
-        highScores2Button.setOnAction(event -> {
-            dialog.hide();
-            HighScoreTableManager.displayHighScoresInMainMenu(2, dialog);
-        });
-
-        Button highScores3Button = new Button("Level 3 High Scores");
-        highScores3Button.setOnAction(event -> {
-            dialog.hide();
-            HighScoreTableManager.displayHighScoresInMainMenu(3, dialog);
-        });
-
-        VBox dialogBox = new VBox(SPACING, highScores1Button, highScores2Button, highScores3Button);
-        dialogBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
-
-        Scene dialogScene = new Scene(dialogBox,
-                HIGH_SCORE_SELECTION_W, HIGH_SCORE_SELECTION_H);
-        dialog.setScene(dialogScene);
-        dialog.showAndWait();
     }
 
     /**
@@ -576,4 +501,3 @@ public class BoulderDashApp extends Application {
         launch(args);
     }
 }
-
