@@ -241,71 +241,101 @@ public class BoulderDashApp extends Application {
         setTimelinesToIndefinite();
     }
 
-    /**
-     * Build GUI to visualise the game.
-     * Sets up layout of game in the center and buttons/game info above it.
-     * @param gameController  the gameController managing the game logic and state.
-     * @return the Pane of the GUI layout.
-     */
     private Pane buildGUI(GameController gameController, boolean autoStart) {
         BorderPane root = new BorderPane();
-
         root.setCenter(gameController.getCanvas());
 
+        HBox toolbar = createToolbar(gameController, autoStart);
+
+        root.setTop(toolbar);
+        return root;
+    }
+
+    private HBox createToolbar(GameController gameController, boolean autoStart) {
         HBox toolbar = new HBox(SPACING);
         toolbar.setPadding(new Insets(SPACING));
 
+        // UI elements
         Button startTickButton = new Button("Resume");
         Button stopTickButton = new Button("Pause");
         Button saveButton = new Button("Save Game");
+        Button resetGridButton = new Button("Reset Level");
 
         if (autoStart) {
             startTickButton.setDisable(true);
             stopTickButton.setDisable(false);
+            saveButton.setDisable(true);
+            resetGridButton.setDisable(true);
         } else {
             startTickButton.setDisable(false);
             stopTickButton.setDisable(true);
+            saveButton.setDisable(false);
+            resetGridButton.setDisable(false);
         }
 
         Text timerText = new Text("Time Remaining: " + secondsRemaining + "s");
+        Text diamondCountText = createDiamondCountText(gameController);
+        Text levelText = new Text("Current Level: " + currentProfile.getMaxLevelReached());
 
-        Button resetGridButton = new Button("Reset Level");
-        resetGridButton.setOnAction(e -> {
+        setupResetButton(resetGridButton, gameController, timerText);
+        setupSaveButton(saveButton, gameController);
+        setupStartStopButtons(startTickButton, stopTickButton, saveButton, resetGridButton);
+
+        setupTimerTimeline(gameController, timerText);
+        setupDiamondTimeline(gameController, diamondCountText);
+
+        toolbar.getChildren().addAll(
+                startTickButton, stopTickButton, resetGridButton,
+                saveButton, timerText, diamondCountText, levelText
+        );
+        return toolbar;
+    }
+
+    private void setupResetButton(Button resetButton, GameController gameController, Text timerText) {
+        resetButton.setOnAction(e -> {
             int levelReached = currentProfile.getMaxLevelReached();
             String levelFile = "src/main/resources/txt/Level" + levelReached + ".txt";
             secondsRemaining = FileHandler.readSecondsFromLevelFile(levelFile);
             gameController.getPlayer().setDiamondCount(FileHandler.readDiamondsCollectedFromLevelFile(levelFile));
             gameController.getPlayer().setKeyInventory(FileHandler.readKeyInventoryFromLevelFile(levelFile));
+
             String[][] initialGrid = FileHandler.readElementGridFromLevelFile(levelFile);
             gameController.getGridManager().reinitializeGrid(initialGrid);
             gameController.getGridManager().initializePlayer(initialGrid);
+
             gameController.setAmoebaLimit(FileHandler.readAmoebaSizeLimitFromLevelFile(levelFile));
             timerText.setText("Time Remaining: " + secondsRemaining + "s");
             gameController.draw();
         });
+    }
 
+    private void setupSaveButton(Button saveButton, GameController gameController) {
         saveButton.setOnAction(e -> {
             ArrayList<KeyColour> keyInventory = gameController.getPlayer().getKeyInventory();
             FileHandler.writeFile(gameController, currentProfile, secondsRemaining, keyInventory);
             closeGame();
         });
+    }
 
-        startTickButton.setOnAction(e -> {
+    private void setupStartStopButtons(Button startButton, Button stopButton, Button saveButton, Button resetButton) {
+        startButton.setOnAction(e -> {
             playAllTimelines();
-            startTickButton.setDisable(true);
-            stopTickButton.setDisable(false);
+            startButton.setDisable(true);
+            stopButton.setDisable(false);
             saveButton.setDisable(true);
-            resetGridButton.setDisable(true);
+            resetButton.setDisable(true);
         });
 
-        stopTickButton.setOnAction(e -> {
+        stopButton.setOnAction(e -> {
             stopAllTimelines();
-            stopTickButton.setDisable(true);
-            startTickButton.setDisable(false);
+            stopButton.setDisable(true);
+            startButton.setDisable(false);
             saveButton.setDisable(false);
-            resetGridButton.setDisable(false);
+            resetButton.setDisable(false);
         });
+    }
 
+    private void setupTimerTimeline(GameController gameController, Text timerText) {
         timerTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             secondsRemaining--;
             timerText.setText("Time Remaining: " + secondsRemaining + "s");
@@ -316,11 +346,19 @@ public class BoulderDashApp extends Application {
             }
         }));
         timerTimeline.setCycleCount(Animation.INDEFINITE);
+    }
 
+    private Text createDiamondCountText(GameController gameController) {
         int diamondsCollected = gameController.getPlayer().getDiamondCount();
         int diamondsRequired = FileHandler.readRequiredDiamondsFromLevelFile(
                 "src/main/resources/txt/Level" + currentProfile.getMaxLevelReached() + ".txt");
-        Text diamondCountText = new Text("Diamonds Collected: " + diamondsCollected + " / " + diamondsRequired);
+        return new Text("Diamonds Collected: " + diamondsCollected + " / " + diamondsRequired);
+    }
+
+    private void setupDiamondTimeline(GameController gameController, Text diamondCountText) {
+        int diamondsRequired = FileHandler.readRequiredDiamondsFromLevelFile(
+                "src/main/resources/txt/Level" + currentProfile.getMaxLevelReached() + ".txt");
+
         diamondCountTimeline = new Timeline(new KeyFrame(Duration.millis(49), event -> {
             if (gameController.getPlayer() != null) {
                 diamondCountText.setText("Diamonds collected: "
@@ -330,14 +368,6 @@ public class BoulderDashApp extends Application {
             }
         }));
         diamondCountTimeline.setCycleCount(Animation.INDEFINITE);
-
-        Text levelText = new Text("Current Level: " + currentProfile.getMaxLevelReached());
-
-        toolbar.getChildren().addAll(startTickButton, stopTickButton, resetGridButton,
-                saveButton, timerText, diamondCountText, levelText);
-        root.setTop(toolbar);
-
-        return root;
     }
 
     /**
