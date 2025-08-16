@@ -35,6 +35,7 @@ public class BoulderDashApp extends Application {
     public static final int DIAMOND_SCORE_VALUE = 100;
     public static final int TIME_SCORE_VALUE = 25;
     public static final int SPACING = 10;
+    public static final int AMOUNT_OF_LEVELS = 3;
 
     // Timeline for periodic ticks
     private Timeline playerTickTimeline;
@@ -261,17 +262,10 @@ public class BoulderDashApp extends Application {
         Button saveButton = new Button("Save Game");
         Button resetGridButton = new Button("Reset Level");
 
-        if (autoStart) {
-            startTickButton.setDisable(true);
-            stopTickButton.setDisable(false);
-            saveButton.setDisable(true);
-            resetGridButton.setDisable(true);
-        } else {
-            startTickButton.setDisable(false);
-            stopTickButton.setDisable(true);
-            saveButton.setDisable(false);
-            resetGridButton.setDisable(false);
-        }
+        startTickButton.setDisable(autoStart);
+        stopTickButton.setDisable(!autoStart);
+        saveButton.setDisable(autoStart);
+        resetGridButton.setDisable(autoStart);
 
         Text timerText = new Text("Time Remaining: " + secondsRemaining + "s");
         Text diamondCountText = createDiamondCountText(gameController);
@@ -371,13 +365,6 @@ public class BoulderDashApp extends Application {
     }
 
     /**
-     * Closes the game.
-     */
-    private void closeGame() {
-        System.exit(0);
-    }
-
-    /**
      * Handles the completion of the current level.
      * Displays High score after level complete.
      * If there is another level, next level will load.
@@ -385,45 +372,77 @@ public class BoulderDashApp extends Application {
      * @param gameController  the gameController managing the game logic and state.
      */
     public void levelCompleted(GameController gameController) {
+        stopAllTimelines();
+
+        int currentLevel = currentProfile.getMaxLevelReached();
+        int score = calculateAndResetGrid(gameController);
+
+        updateHighScores(currentLevel, score);
+
+        if (currentLevel + 1 <= AMOUNT_OF_LEVELS) { // Has the final level been beaten?
+            loadNextLevel(currentLevel + 1);
+        } else {
+            handleVictory();
+        }
+    }
+
+    /**
+     * Resets the grid for the current level and calculates the score.
+     */
+    private int calculateAndResetGrid(GameController gameController) {
         int levelReached = currentProfile.getMaxLevelReached();
         String levelFile = "src/main/resources/txt/Level" + levelReached + ".txt";
+
         String[][] initialGrid = FileHandler.readElementGridFromLevelFile(levelFile);
-        int score = calcScore(secondsRemaining, gameController.getPlayer().getDiamondCount());
+        int score = (calcScore(secondsRemaining, gameController.getPlayer().getDiamondCount()));
+
         gameController.getGridManager().reinitializeGrid(initialGrid);
         gameController.getGridManager().initializePlayer(initialGrid);
 
-        stopAllTimelines();
+        return score;
+    }
 
-        // Show the high score table for level just beat
-        int currentLevel = currentProfile.getMaxLevelReached();
+    /**
+     * Updates and displays the high score table for the completed level.
+     */
+    private void updateHighScores(int currentLevel, int score) {
         String currentPlayerName = currentProfile.getName();
         HighScoreTableManager.updateHighScoreTable(currentPlayerName, score, currentLevel);
-        Platform.runLater(() -> {
-            HighScoreTableManager.displayHighScoresAfterLevel(currentLevel, score);
-        });
 
-        // Check if there’s a next level
-        int nextLevel = currentLevel + 1;
-        if (nextLevel <= 3) {
-            String nextLevelFile = "src/main/resources/txt/Level" + nextLevel + ".txt";
-            currentProfile.setMaxLevelReached(nextLevel); // Update player's progress
-            profiles.set(profiles.indexOf(currentProfile), currentProfile); // Update profile list
-            ProfileManager.saveProfileToFile(currentProfile); // Persist changes
-
-            secondsRemaining = FileHandler.readSecondsFromLevelFile(nextLevelFile);
-            setupGame(primaryStage, nextLevelFile, false);
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("VICTORY");
-            alert.setHeaderText("Congratulations!");
-            alert.setContentText("You have completed all levels!");
-            alert.show();
-
-            profiles.remove(currentProfile);
-            ProfileManager.deleteProfile(currentProfile.getPlayerId());
-            start(primaryStage);
-        }
+        Platform.runLater(() ->
+                HighScoreTableManager.displayHighScoresAfterLevel(currentLevel, score)
+        );
     }
+
+    /**
+     * Loads the next level and updates profile progress.
+     */
+    private void loadNextLevel(int nextLevel) {
+        String nextLevelFile = "src/main/resources/txt/Level" + nextLevel + ".txt";
+
+        currentProfile.setMaxLevelReached(nextLevel);
+        profiles.set(profiles.indexOf(currentProfile), currentProfile);
+        ProfileManager.saveProfileToFile(currentProfile);
+
+        secondsRemaining = FileHandler.readSecondsFromLevelFile(nextLevelFile);
+        setupGame(primaryStage, nextLevelFile, false);
+    }
+
+    /**
+     * Handles game victory (final level beaten).
+     */
+    private void handleVictory() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("VICTORY");
+        alert.setHeaderText("Congratulations!");
+        alert.setContentText("You have completed all levels!");
+        alert.show();
+
+        profiles.remove(currentProfile);
+        ProfileManager.deleteProfile(currentProfile.getPlayerId());
+        start(primaryStage);
+    }
+
 
     /**
      * Calculates the score for the level the player just beat
@@ -501,6 +520,13 @@ public class BoulderDashApp extends Application {
         gameController.setAmoebaLimit(FileHandler.readAmoebaSizeLimitFromLevelFile(levelFile));
 
         return gameController;
+    }
+
+    /**
+     * Closes the game.
+     */
+    private void closeGame() {
+        System.exit(0);
     }
 
     /**
