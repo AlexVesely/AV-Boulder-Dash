@@ -19,7 +19,6 @@ public class GameController {
     public static boolean waitingForExplosion = false;
     private static boolean transformToDiamonds;
 
-    private int amoebaLimit;
     private int diamondsRequired;
 
     private static boolean gameStatus = true;
@@ -398,18 +397,9 @@ public class GameController {
      * @param amoebaLimit the maximum number of amoebas allowed
      */
     public void setAmoebaLimit(int amoebaLimit) {
-        this.amoebaLimit = amoebaLimit;
         for (int i = 0; i < gridManager.getAmoebaGroups().size(); i++) {
             gridManager.getAmoebaGroups().get(i).setAmoebaSizeLimit(amoebaLimit);
         }
-    }
-
-    /**
-     * Retrieves the maximum allowable limit for amoebas in the game.
-     * @return the amoeba limit as an integer.
-     */
-    public int getAmoebaLimit() {
-        return amoebaLimit;
     }
 
 }

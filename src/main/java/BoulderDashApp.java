@@ -186,76 +186,17 @@ public class BoulderDashApp extends Application {
      */
     public void setupGame(Stage primaryStage, String levelFile, boolean autoStart) {
         String[][] initialGrid = FileHandler.readElementGridFromLevelFile(levelFile);
-        int amoebaGrowthRate = FileHandler.readAmoebaGrowthRateFromLevelFile(levelFile); //Read amoeba growth rate
+        int amoebaGrowthRate = FileHandler.readAmoebaGrowthRateFromLevelFile(levelFile);
         secondsRemaining = FileHandler.readSecondsFromLevelFile(levelFile);
 
-        final int canvasWidth = initialGrid[0].length * GRID_CELL_WIDTH;
-        final int canvasHeight = initialGrid.length * GRID_CELL_HEIGHT;
-
-        Canvas canvas = new Canvas(canvasWidth, canvasHeight);
-
+        Canvas canvas = createCanvas(initialGrid);
         GameController gameController = initializeGameController(initialGrid, canvas, levelFile);
 
-        Pane root = buildGUI(gameController);
+        Pane root = buildGUI(gameController,autoStart);
 
-        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            gameController.registerInput(event.getCode());
-            event.consume();
-        });
+        Scene scene = createGameScene(root, gameController);
 
-        KeyFrame playerKeyFrame = new KeyFrame(Duration.millis(150), event -> {
-            gameController.playerTick();
-        });
-
-        KeyFrame killPlayerKeyFrame = new KeyFrame(Duration.millis(50), event -> {
-            gameController.killTick();
-        });
-
-        KeyFrame dangerousRocksRollKeyFrame = new KeyFrame(Duration.millis(120), event -> {
-            gameController.dangerousRockRollTick();
-        });
-
-        KeyFrame dangerousRocksFallKeyFrame = new KeyFrame(Duration.millis(100), event -> {
-            gameController.dangerousRockFallTick();
-
-        });
-
-        KeyFrame flyKeyFrame = new KeyFrame(Duration.millis(2000), event -> {
-            gameController.flyTick();
-        });
-
-        KeyFrame frogKeyFrame = new KeyFrame(Duration.millis(2000), event -> {
-            gameController.frogTick();
-        });
-
-        KeyFrame amoebaKeyFrame = new KeyFrame(Duration.millis(amoebaGrowthRate), event -> {
-            gameController.amoebaTick();
-        });
-
-        KeyFrame explosionKeyFrame = new KeyFrame(Duration.millis(1000), event -> {
-            gameController.explosionTick();
-        });
-
-        KeyFrame checkLevelWinKeyFrame = new KeyFrame(Duration.millis(49), event -> {
-            if (gameController.checkLevelWinTick()) {
-                levelCompleted(gameController);
-            }
-        });
-
-        playerTickTimeline = new Timeline(playerKeyFrame);
-        dangerousRockFallTickTimeline = new Timeline(dangerousRocksFallKeyFrame);
-        dangerousRockRollTimeline = new Timeline(dangerousRocksRollKeyFrame);
-        flyTickTimeline = new Timeline(flyKeyFrame);
-        frogTickTimeline = new Timeline(frogKeyFrame);
-        amoebaTickTimeline = new Timeline(amoebaKeyFrame);
-        killPlayerTickTimeLine = new Timeline(killPlayerKeyFrame);
-        explosionTickTimeLine = new Timeline(explosionKeyFrame);
-        checkLevelWinTimeline = new Timeline(checkLevelWinKeyFrame);
-
-        setTimelinesToIndefinite();
-
-        gameController.draw();
+        setupTimelines(gameController, amoebaGrowthRate);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -263,6 +204,41 @@ public class BoulderDashApp extends Application {
         if (autoStart) {
             playAllTimelines();
         }
+
+        gameController.draw();
+    }
+
+    private Canvas createCanvas(String[][] grid) {
+        final int canvasWidth = grid[0].length * GRID_CELL_WIDTH;
+        final int canvasHeight = grid.length * GRID_CELL_HEIGHT;
+        return new Canvas(canvasWidth, canvasHeight);
+    }
+
+    private Scene createGameScene(Pane root, GameController controller) {
+        Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            controller.registerInput(event.getCode());
+            event.consume();
+        });
+        return scene;
+    }
+
+    private void setupTimelines(GameController controller, int amoebaGrowthRate) {
+        playerTickTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> controller.playerTick()));
+        killPlayerTickTimeLine = new Timeline(new KeyFrame(Duration.millis(50), e -> controller.killTick()));
+        dangerousRockRollTimeline = new Timeline(new KeyFrame(Duration.millis(120), e -> controller.dangerousRockRollTick()));
+        dangerousRockFallTickTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> controller.dangerousRockFallTick()));
+        flyTickTimeline = new Timeline(new KeyFrame(Duration.millis(2000), e -> controller.flyTick()));
+        frogTickTimeline = new Timeline(new KeyFrame(Duration.millis(2000), e -> controller.frogTick()));
+        amoebaTickTimeline = new Timeline(new KeyFrame(Duration.millis(amoebaGrowthRate), e -> controller.amoebaTick()));
+        explosionTickTimeLine = new Timeline(new KeyFrame(Duration.millis(1000), e -> controller.explosionTick()));
+        checkLevelWinTimeline = new Timeline(new KeyFrame(Duration.millis(49), e -> {
+            if (controller.checkLevelWinTick()) {
+                levelCompleted(controller);
+            }
+        }));
+
+        setTimelinesToIndefinite();
     }
 
     /**
@@ -271,20 +247,25 @@ public class BoulderDashApp extends Application {
      * @param gameController  the gameController managing the game logic and state.
      * @return the Pane of the GUI layout.
      */
-    private Pane buildGUI(GameController gameController) {
+    private Pane buildGUI(GameController gameController, boolean autoStart) {
         BorderPane root = new BorderPane();
 
-        // Add the canvas to the center
         root.setCenter(gameController.getCanvas());
 
-        // Create a toolbar with buttons
         HBox toolbar = new HBox(SPACING);
         toolbar.setPadding(new Insets(SPACING));
 
         Button startTickButton = new Button("Resume");
         Button stopTickButton = new Button("Pause");
-        stopTickButton.setDisable(true);
         Button saveButton = new Button("Save Game");
+
+        if (autoStart) {
+            startTickButton.setDisable(true);
+            stopTickButton.setDisable(false);
+        } else {
+            startTickButton.setDisable(false);
+            stopTickButton.setDisable(true);
+        }
 
         Text timerText = new Text("Time Remaining: " + secondsRemaining + "s");
 
@@ -318,17 +299,7 @@ public class BoulderDashApp extends Application {
         });
 
         stopTickButton.setOnAction(e -> {
-            timerTimeline.stop();
-            diamondCountTimeline.stop();
-            playerTickTimeline.stop();
-            dangerousRockRollTimeline.stop();
-            dangerousRockFallTickTimeline.stop();
-            flyTickTimeline.stop();
-            frogTickTimeline.stop();
-            amoebaTickTimeline.stop();
-            killPlayerTickTimeLine.stop();
-            explosionTickTimeLine.stop();
-            checkLevelWinTimeline.stop();
+            stopAllTimelines();
             stopTickButton.setDisable(true);
             startTickButton.setDisable(false);
             saveButton.setDisable(false);
@@ -391,15 +362,7 @@ public class BoulderDashApp extends Application {
         gameController.getGridManager().reinitializeGrid(initialGrid);
         gameController.getGridManager().initializePlayer(initialGrid);
 
-        playerTickTimeline.stop();
-        killPlayerTickTimeLine.stop();
-        dangerousRockFallTickTimeline.stop();
-        dangerousRockRollTimeline.stop();
-        flyTickTimeline.stop();
-        frogTickTimeline.stop();
-        amoebaTickTimeline.stop();
-        explosionTickTimeLine.stop();
-        timerTimeline.stop();
+        stopAllTimelines();
 
         // Show the high score table for level just beat
         int currentLevel = currentProfile.getMaxLevelReached();
@@ -457,6 +420,23 @@ public class BoulderDashApp extends Application {
         killPlayerTickTimeLine.play();
         explosionTickTimeLine.play();
         checkLevelWinTimeline.play();
+    }
+
+    /**
+     * Stops all the timelines.
+     */
+    private void stopAllTimelines() {
+        timerTimeline.stop();
+        diamondCountTimeline.stop();
+        playerTickTimeline.stop();
+        dangerousRockFallTickTimeline.stop();
+        dangerousRockRollTimeline.stop();
+        flyTickTimeline.stop();
+        frogTickTimeline.stop();
+        amoebaTickTimeline.stop();
+        killPlayerTickTimeLine.stop();
+        explosionTickTimeLine.stop();
+        checkLevelWinTimeline.stop();
     }
 
     /**
