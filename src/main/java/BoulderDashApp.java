@@ -37,7 +37,6 @@ public class BoulderDashApp extends Application {
     public static final int SPACING = 10;
     public static final int AMOUNT_OF_LEVELS = 3;
 
-    // Timeline for periodic ticks
     private Timeline playerTickTimeline;
     private Timeline dangerousRockFallTickTimeline;
     private Timeline dangerousRockRollTimeline;
@@ -122,6 +121,9 @@ public class BoulderDashApp extends Application {
         );
     }
 
+    /**
+     * Shows the high scores table selection dialog.
+     */
     private void showHighScoresTableSelection() {
         MainMenuUI.showHighScoresTableSelection(
                 (level, dialog) -> HighScoreTableManager.displayHighScoresInMainMenu(level, dialog)
@@ -209,12 +211,18 @@ public class BoulderDashApp extends Application {
         gameController.draw();
     }
 
+    /**
+     * Creates the game canvas based on the grid size.
+     */
     private Canvas createCanvas(String[][] grid) {
         final int canvasWidth = grid[0].length * GRID_CELL_WIDTH;
         final int canvasHeight = grid.length * GRID_CELL_HEIGHT;
         return new Canvas(canvasWidth, canvasHeight);
     }
 
+    /**
+     * Creates the game scene and sets up key event handling.
+     */
     private Scene createGameScene(Pane root, GameController controller) {
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -224,6 +232,9 @@ public class BoulderDashApp extends Application {
         return scene;
     }
 
+    /**
+     * Sets up all game timelines.
+     */
     private void setupTimelines(GameController controller, int amoebaGrowthRate) {
         playerTickTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> controller.playerTick()));
         killPlayerTickTimeLine = new Timeline(new KeyFrame(Duration.millis(50), e -> controller.killTick()));
@@ -242,6 +253,9 @@ public class BoulderDashApp extends Application {
         setTimelinesToIndefinite();
     }
 
+    /**
+     * Builds the main game GUI layout.
+     */
     private Pane buildGUI(GameController gameController, boolean autoStart) {
         BorderPane root = new BorderPane();
         root.setCenter(gameController.getCanvas());
@@ -252,6 +266,9 @@ public class BoulderDashApp extends Application {
         return root;
     }
 
+    /**
+     * Creates the top toolbar with menu buttons.
+     */
     private HBox createToolbar(GameController gameController, boolean autoStart) {
         HBox toolbar = new HBox(SPACING);
         toolbar.setPadding(new Insets(SPACING));
@@ -285,6 +302,9 @@ public class BoulderDashApp extends Application {
         return toolbar;
     }
 
+    /**
+     * Sets up the reset button action.
+     */
     private void setupResetButton(Button resetButton, GameController gameController, Text timerText) {
         resetButton.setOnAction(e -> {
             int levelReached = currentProfile.getMaxLevelReached();
@@ -303,6 +323,9 @@ public class BoulderDashApp extends Application {
         });
     }
 
+    /**
+     * Sets up the save button action.
+     */
     private void setupSaveButton(Button saveButton, GameController gameController) {
         saveButton.setOnAction(e -> {
             ArrayList<KeyColour> keyInventory = gameController.getPlayer().getKeyInventory();
@@ -311,6 +334,9 @@ public class BoulderDashApp extends Application {
         });
     }
 
+    /**
+     * Sets up the start and stop button actions.
+     */
     private void setupStartStopButtons(Button startButton, Button stopButton, Button saveButton, Button resetButton) {
         startButton.setOnAction(e -> {
             playAllTimelines();
@@ -329,6 +355,9 @@ public class BoulderDashApp extends Application {
         });
     }
 
+    /**
+     * Sets up the timer timeline for countdown.
+     */
     private void setupTimerTimeline(GameController gameController, Text timerText) {
         timerTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             secondsRemaining--;
@@ -342,6 +371,9 @@ public class BoulderDashApp extends Application {
         timerTimeline.setCycleCount(Animation.INDEFINITE);
     }
 
+    /**
+     * Creates the diamond count text display.
+     */
     private Text createDiamondCountText(GameController gameController) {
         int diamondsCollected = gameController.getPlayer().getDiamondCount();
         int diamondsRequired = FileHandler.readRequiredDiamondsFromLevelFile(
@@ -349,6 +381,9 @@ public class BoulderDashApp extends Application {
         return new Text("Diamonds Collected: " + diamondsCollected + " / " + diamondsRequired);
     }
 
+    /**
+     * Sets up the diamond count timeline for updates.
+     */
     private void setupDiamondTimeline(GameController gameController, Text diamondCountText) {
         int diamondsRequired = FileHandler.readRequiredDiamondsFromLevelFile(
                 "src/main/resources/txt/Level" + currentProfile.getMaxLevelReached() + ".txt");
@@ -505,7 +540,7 @@ public class BoulderDashApp extends Application {
     }
 
     /**
-     * Initializes the game controller and sets its properties.
+     * Initializes the game controller with level data.
      * @param initialGrid the 2D array of the initial state of the game grid.
      * @param canvas the canvas used for drawing the game.
      * @param levelFile the file containing the level's data.
@@ -523,7 +558,7 @@ public class BoulderDashApp extends Application {
     }
 
     /**
-     * Closes the game.
+     * Closes the game application.
      */
     private void closeGame() {
         System.exit(0);
