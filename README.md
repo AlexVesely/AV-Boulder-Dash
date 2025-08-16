@@ -1,8 +1,12 @@
-Initial ReadMe
+Link to original Boulder Dash Group Project: https://github.com/Karamveer9200/Boulder-Dash-Remake
 
-Link to original Boulder Dash: https://github.com/Karamveer9200/Boulder-Dash-Remake
+## About
 
-## 🙌 Acknowledgements
+Copied my groups project to a personal repository to refactor and showcase my work.
+
+-My contributions...
+
+## Acknowledgements
 
 A big thank you to my teammates for their collaboration and hard work on this project: 
 - @Rago179
@@ -11,3 +15,5 @@ A big thank you to my teammates for their collaboration and hard work on this pr
 - @Superaka5
 - @rhysll
 - @Tahi-rahman
+
+## Setup
