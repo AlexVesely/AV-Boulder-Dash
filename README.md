@@ -12,6 +12,9 @@ This repository is a showcase of our game and my work.
 
 ## Demo
 
+<img src ="https://github.com/user-attachments/assets/16e9bd1f-c4a8-4a12-84f0-38829a0e31ea" width=32%>
+<img src ="https://github.com/user-attachments/assets/d4f13dd3-ba48-4137-88f9-dfe2f923c69b" width=32%>
+
 Watch a full gameplay and program showcase <a href="https://youtu.be/5HLWyaX4BHc">here!</a> 
 
 ## Features
