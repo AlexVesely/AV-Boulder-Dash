@@ -46,7 +46,7 @@ For specifically this repository, I focused on organizing and improving the proj
 
 - <b>Balancing quality with deadlines:</b> As the deadline approached, we learned that shipping a functional product sometimes takes precedence over endlessly refactoring code. This taught me how to prioritize features, make trade-offs, and focus on delivering value.
 
-- <b>Refactoring and extending large codebases:</b> Nine months after the group submission, I revisited the project and worked on improving it. I gained experience in the challenge of navigating legacy code by reorganising the project structure and cleaning up the code. This process taught me how to enhance the readability, maintainability, and scalability of an existing codebase.
+- <b>Refactoring and extending large codebases:</b> Nine months after the group submission, I revisited the project and navigated legacy code. This process taught me the importance of readability, maintainability, and scalability of an existing codebase.
 
 ## Set up
 
