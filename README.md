@@ -32,7 +32,7 @@ Watch a full gameplay and program showcase in this <a href="https://youtu.be/5HL
 
 For specifically this repository, I focused on organizing and improving the project beyond the group’s original submission. I:
 
-- Restructured the project for a cleaner, more extendable layout.
+- Restructured the project for a cleaner, more extendable layout (too messy I couldn't fork the group repository to tidy it).
 - Refactored large classes and methods to improve readability and maintainability.
 - Fixed small bugs that remained in the group’s final version.
 
