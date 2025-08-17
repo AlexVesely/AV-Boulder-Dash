@@ -12,6 +12,8 @@ This repository is a showcase of our game and my work.
 
 ## Demo
 
+Watch a full gameplay and program showcase <a href="YOUTUBE LINK HERE">here!</a> 
+
 ## Features
 My contributions...
 
