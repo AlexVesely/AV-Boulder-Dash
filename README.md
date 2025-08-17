@@ -15,12 +15,39 @@ This repository is a showcase of our game and my work.
 Watch a full gameplay and program showcase <a href="https://youtu.be/5HLWyaX4BHc">here!</a> 
 
 ## Features
-My contributions...
+
+- 3 Playable Levels with increasing difficulty.
+- Multiple tile types (Path, Dirt, Walls, Magic Walls, Keys, Locks).
+- Multiple actors (Boulder, Diamond, Amoeba).
+- 😈 and 💩 are enemies that move forward along edges in their paths.
+- 🐸 intelligently seeks the player using Dijkstra’s algorithm for shortest-path tracking.
+- Complex interactions between all entities, creating dynamic gameplay.
+- Time limit for each level.
+- Game over and reset for each level.
+- Profiles with saving and loading levels in their saved state.
+- Scores calculated when levels are beaten and high score table to track different profiles' scores.
+
+For specifically this repository, I focused on organizing and improving the project beyond the group’s original submission. I:
+
+- Restructured the project for a cleaner, more extendable layout.
+- Refactored large classes and methods to improve readability and maintainability.
+- Fixed small bugs that remained in the group’s final version.
+
+## Experience and Lessons Learnt
+
+- <b>Importance of planning and adaptability:</b> Our initial UML class diagram turned out to be heavily flawed and poorly structured. Only during implementation did we realize what was planned would not work so we had to completely redesign a system plan under time pressure.
+
+- <b>Team collaboration and delegation:</b> Each member took ownership of different sections of the program while regularly reviewing and integrating each other’s work. This taught us the value of clear communication, accountability, and collaborative problem solving.
+
+- <b>Version control in practice:</b> This was my first time working with Git in a shared repository. I learned how to manage merge conflicts, resolve issues quickly, and maintain a clean project history despite the chaos of multiple contributors.
+
+- <b>Balancing quality with deadlines:</b> As the deadline approached, we learned that shipping a functional product sometimes takes precedence over endlessly refactoring code. This taught me how to prioritize features, make trade-offs, and focus on delivering value.
+
+- <b>Refactoring and extending large codebases:</b> Nine months after the group submission, I revisited the project and worked on improving it. I gained experience in the challenge of navigating legacy code by reorganising the project structure and cleaning up the code. This process taught me how to enhance the readability, maintainability, and scalability of an existing codebase.
 
 ## Set up
 
-I chose not to package an executable because I want this repository to highlight the actual source code and JavaFX setup
-
+This repository is focused on showcasing the source code and JavaFX setup, so no pre-packaged executable is included.
 ### Requirements
 - JDK 21
 - JavaFX SDK 21.0.5
@@ -36,14 +63,12 @@ I chose not to package an executable because I want this repository to highlight
 5) Make sure the 'resourses' folder is marked as 'Resources Root' and java folder is marked as 'Sources Root'.
 6) Run the game and enjoy!
 
-## Experience and Lessons Learnt
-
 ## Acknowledgements
 
-A big thank you to my teammates for their collaboration and hard work on this project: 
-- @Rago179
-- @Karamveer9200
-- @ibbybk
-- @Superaka5
-- @rhysll
-- @Tahi-rahman
+A massive thank you to my teammates for their collaboration and hard work on this project:
+- [@Rago179](https://github.com/Rago179)
+- [@Karamveer9200](https://github.com/Karamveer9200)
+- [@ibbybk](https://github.com/ibbybk)
+- [@Superaka5](https://github.com/Superaka5)
+- [@rhysll](https://github.com/rhysll)
+- [@Tahi-rahman](https://github.com/Tahi-rahman)
