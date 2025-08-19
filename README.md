@@ -30,9 +30,9 @@ Watch a full gameplay and program showcase in this <a href="https://youtu.be/5HL
 - Profiles with saving and loading levels in their saved state.
 - Scores calculated when levels are beaten and high score table to track different profiles' scores.
 
-For specifically this repository, I focused on organizing and improving the project beyond the group’s original submission. I:
+After completing the game with my group I returned to focus on organizing and improving the project beyond the group’s original submission. I:
 
-- Restructured the project for a cleaner, more extendable layout (too messy I couldn't fork the group repository to tidy it).
+- Restructured the project for a cleaner, more extendable layout (I couldn't fork the group repository to tidy it as it was too messy).
 - Refactored large classes and methods to improve readability and maintainability.
 - Fixed small bugs that remained in the group’s final version.
 
