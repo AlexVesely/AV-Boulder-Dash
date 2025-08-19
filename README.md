@@ -50,7 +50,7 @@ After completing the game with my group I returned to focus on organizing and im
 
 ## Set up
 
-This repository is focused on showcasing the source code and JavaFX setup, so no pre-packaged executable is included.
+This repository is focused on showcasing the source code, so no pre-packaged executable is included.
 ### Requirements
 - JDK 21
 - JavaFX SDK 21.0.5
