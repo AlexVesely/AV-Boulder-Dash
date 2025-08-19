@@ -6,7 +6,7 @@
 
 This repository is a copy of my group's implementation of Boulder Dash. My group's repository can be found <a href="https://github.com/Karamveer9200/Boulder-Dash-Remake">here!</a> 
 
-Boulder Dash is a classic 1984 Atari game. The player digs through dirt-filled caves, collecting diamonds while avoiding falling rocks and enemies, with the goal of reaching the exit before time runs out.
+Boulder Dash is a classic 1984 Atari game. The player digs through dirt-filled caves, collecting diamonds while avoiding falling boulders and enemies, with the goal of reaching the exit before time runs out.
 
 This repository is a showcase of our game and my work.
 
