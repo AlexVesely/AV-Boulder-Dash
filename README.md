@@ -8,6 +8,12 @@ This repository is a copy of my group's implementation of Boulder Dash. My group
 
 Boulder Dash is a classic 1984 Atari game. The player digs through dirt-filled caves, collecting diamonds while avoiding falling boulders and enemies, with the goal of reaching the exit before time runs out.
 
+My key contributions included:
+- Documenting meeting minutes and keeping the team focussed during weekly meetings.
+- Building the game’s foundation with a 2D grid and player movement.
+- Creating the FileHandler class to handle saving/loading game states.
+- Developing most of the main menu and contributing to the PlayerProfile and HighScoreTable classes.
+
 This repository is a showcase of our game and my work.
 
 ## Demo
