@@ -11,8 +11,8 @@ Boulder Dash is a classic 1984 Atari game. The player digs through dirt-filled c
 My key contributions included:
 - Documenting meeting minutes and keeping the team focussed during weekly meetings.
 - Building the game’s foundation with a 2D grid and player movement.
-- Creating the FileHandler class to handle saving/loading game states.
-- Developing most of the main menu and contributing to the PlayerProfile and HighScoreTable classes.
+- Creating file handling for the game so that game states can be saved and loaded.
+- Developing most of the main menu and implementing 'Player Profile' and 'High Score Table' functionality.
 
 This repository is a showcase of our game and my work.
 
@@ -44,15 +44,15 @@ After completing the game with my group I returned to focus on organizing and im
 
 ## Experience and Lessons Learnt
 
-- <b>Importance of planning and adaptability:</b> Our initial UML class diagram turned out to be heavily flawed and poorly structured. Only during implementation did we realize what was planned would not work so we had to completely redesign a system plan under time pressure.
+- <b>Planning and adaptability:</b> Our initial UML class diagram was deeply flawed. Attempting to implement it revealed its shortcomings, teaching me the importance of planning well but staying adaptable.
 
-- <b>Team collaboration and delegation:</b> Each member took ownership of different sections of the program while regularly reviewing and integrating each other’s work. This taught us the value of clear communication, accountability, and collaborative problem solving.
+- <b>Team collaboration:</b> Each member owned a section of the code, but frequent reviews and integration taught us the importance of communication and accountability.
 
-- <b>Version control in practice:</b> This was my first time working with Git in a shared repository. I learned how to manage merge conflicts, resolve issues quickly, and maintain a clean project history despite the chaos of multiple contributors.
+- <b>Version control in practice:</b> This was my first real Git collaboration. I learned how to manage merge conflicts, resolve issues quickly, and maintain a clean project history despite the chaos of multiple contributors.
 
-- <b>Balancing quality with deadlines:</b> As the deadline approached, we learned that shipping a functional product sometimes takes precedence over endlessly refactoring code. This taught me how to prioritize features, make trade-offs, and focus on delivering value.
+- <b>Balancing quality with deadlines:</b> Sometimes shipping functional code matters more than perfection. This taught me to prioritize features and trade-offs under pressure.
 
-- <b>Refactoring and extending large codebases:</b> Nine months after the group submission, I revisited the project and navigated legacy code. This process taught me the importance of readability, maintainability, and scalability of an existing codebase.
+- <b>Refactoring and extending large codebases:</b> Eight months later, I revisited the project and navigated legacy code. This process taught me the importance of readability and maintainability of an existing codebase.
 
 ## Set up
 
