@@ -11,7 +11,7 @@ Boulder Dash is a classic 1984 Atari game. The player digs through dirt-filled c
 My key contributions included:
 - Documenting meeting minutes and keeping the team focussed during weekly meetings.
 - Building the game’s foundation with a 2D grid and player movement.
-- Creating file handling for the game so that game states can be saved and loaded.
+- Implementing file handling for the game so that game states can be saved and loaded.
 - Developing most of the main menu and implementing 'Player Profile' and 'High Score Table' functionality.
 
 This repository is a showcase of our game and my work.
